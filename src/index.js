@@ -60,6 +60,7 @@ function processData() {
   }
   return data;
 }
+
 fileInputs.forEach((fileInput, index) => {
   fileInput.addEventListener("change", async (event) => {
     const file = event.target.files[0];
@@ -71,6 +72,11 @@ fileInputs.forEach((fileInput, index) => {
         if (data.shape.length === 2 && data.shape[0] > 0 && data.shape[1] > 0) {
           console.log(data);
           updateCanvas(canvases[index], data.data, data.shape);
+          if (Object.keys(dataStore).length == 3) {
+            const finalData = processData();
+            console.log(finalData);
+            drawImage(finalData);
+          }
         } else {
           alert("The .npy file does not contain a valid 2D array!");
         }

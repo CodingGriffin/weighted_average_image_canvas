@@ -30,27 +30,22 @@ sliders.forEach(({ slider, value }) => {
     valueElement.textContent = sliderElement.value;
 
     console.log("index:", slider, "value:", sliderElement.value);
-
-    const data = processData();
-    console.log(data);
-    drawImage(data);
+    if (Object.keys(dataStore).length == 3) {
+      const data = processData();
+      console.log(data);
+      drawImage(data);
+    }
   });
 });
 
 function processData() {
   const data = new Float32Array(DATA_LENTH);
   // console.log("dataStore:", dataStore["data0"][0]);
-  const normalizedData = dataStore["data0"].data.map((value) =>
-    value * 255
-  );
-  const normalizedData1 = dataStore["data1"].data.map((value) =>
-    value * 255
-  );
-  const normalizedData2 = dataStore["data2"].data.map((value) =>
-    value * 255
-  );
+  const normalizedData = dataStore["data0"].data.map((value) => value * 255);
+  const normalizedData1 = dataStore["data1"].data.map((value) => value * 255);
+  const normalizedData2 = dataStore["data2"].data.map((value) => value * 255);
   // console.log(document.getElementById("slider0").value ,document.getElementById("slider1").value ,document.getElementById("slider2").value )
-  console.log("res:",normalizedData, normalizedData1, normalizedData2);
+  console.log("res:", normalizedData, normalizedData1, normalizedData2);
   for (let i = 0; i < DATA_LENTH; i++) {
     data[i] =
       (normalizedData[i] * document.getElementById("slider0").value +

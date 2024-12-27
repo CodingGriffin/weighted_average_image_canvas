@@ -30,29 +30,45 @@ sliders.forEach(({ slider, value }) => {
     valueElement.textContent = sliderElement.value;
 
     console.log("index:", slider, "value:", sliderElement.value);
-    if (Object.keys(dataStore).length == 3) {
-      const data = processData();
-      console.log(data);
-      drawImage(data);
-    }
+    // if (Object.keys(dataStore).length == 3) {
+    const data = processData();
+    console.log(data);
+    drawImage(data);
+    // }
   });
 });
 
 function processData() {
   const data = new Float32Array(DATA_LENTH);
   // console.log("dataStore:", dataStore["data0"][0]);
-  const normalizedData = dataStore["data0"].data.map((value) => value * 255);
-  const normalizedData1 = dataStore["data1"].data.map((value) => value * 255);
-  const normalizedData2 = dataStore["data2"].data.map((value) => value * 255);
+  const normalizedDatas = Object.keys(dataStore).map((key) =>
+    dataStore[key].data.map((value) => value * 255)
+  );
+  // const normalizedData = dataStore["data0"].data.map((value) => value * 255);
+  // const normalizedData1 = dataStore["data1"].data.map((value) => value * 255);
+  // const normalizedData2 = dataStore["data2"].data.map((value) => value * 255);
   // console.log(document.getElementById("slider0").value ,document.getElementById("slider1").value ,document.getElementById("slider2").value )
-  console.log("res:", normalizedData, normalizedData1, normalizedData2);
+  // console.log("res:", normalizedData, normalizedData1, normalizedData2);
+  console.log(normalizedDatas);
+  const totalWeight = normalizedDatas.reduce(
+    (total, item, index) =>
+      total + Number(document.getElementById(`slider${index}`).value),
+    0
+  );
   for (let i = 0; i < DATA_LENTH; i++) {
     data[i] =
-      (normalizedData[i] * document.getElementById("slider0").value +
-        normalizedData1[i] * document.getElementById("slider1").value +
-        normalizedData2[i] * document.getElementById("slider2").value) /
-      3;
+      normalizedDatas.reduce(
+        (total, item, index) =>
+          total + item[i] * document.getElementById(`slider${index}`).value,
+        0
+      ) / totalWeight;
+
+    // (normalizedData[i] * document.getElementById("slider0").value +
+    //   normalizedData1[i] * document.getElementById("slider1").value +
+    //   normalizedData2[i] * document.getElementById("slider2").value) /
+    // 3;
   }
+  console.log("totalWeight:", totalWeight);
   return data;
 }
 
@@ -67,11 +83,11 @@ fileInputs.forEach((fileInput, index) => {
         if (data.shape.length === 2 && data.shape[0] > 0 && data.shape[1] > 0) {
           console.log(data);
           updateCanvas(canvases[index], data.data, data.shape);
-          if (Object.keys(dataStore).length == 3) {
-            const finalData = processData();
-            console.log(finalData);
-            drawImage(finalData);
-          }
+          // if (Object.keys(dataStore).length == 3) {
+          const finalData = processData();
+          console.log(finalData);
+          drawImage(finalData);
+          // }
         } else {
           alert("The .npy file does not contain a valid 2D array!");
         }
